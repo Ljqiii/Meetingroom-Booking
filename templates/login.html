@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}注册{% endblock %}
+
+
+{% block body %}
+
+    <form action="login" method="post">
+        {{ form.csrf_token }}
+        {{ form.username.label }}
+        {{ form.username }}
+        <br>
+        {{ form.password.label }}
+        {{ form.password }}
+        <br>
+        {{ form.remember }}
+        {{ form.remember.label }}
+        <input type="submit" value="提交">
+
+    </form>
+
+
+
+{% endblock %}

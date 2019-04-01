@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}注册{% endblock %}
+
+
+{% block body %}
+
+    <form action="register" method="post">
+
+        {{ form.csrf_token }}
+        <br>
+        {% if (nothaveadmin==True) %}
+            注册一个 admin 账户成为管理员
+        {% endif %}
+        <br>
+        {{ form.role.label }}
+        {{ form.role }}
+        <br>
+{#        {{ form.name.label }}#}
+{#        {{ form.name }}#}
+{#        <br>#}
+        {{ form.username.label }}
+        {{ form.username }}
+        <br>
+        {{ form.password.label }}
+        {{ form.password }}
+        <br>
+        {{ form.repeatpassword.label }}
+        {{ form.repeatpassword }}
+        <br>
+        <input type="submit" value="提交">
+
+    </form>
+
+
+
+{% endblock %}
