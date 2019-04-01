@@ -5,11 +5,12 @@ import datetime
 from Model import *
 from ext.login_manger import loginmanager
 
-from bp import auth, room
+from bp import auth, room, notification
 
 app = Flask(__name__)
 app.register_blueprint(auth.authbp)
 app.register_blueprint(room.roombp)
+app.register_blueprint(notification.notificationbp)
 
 # mysql+mysqlconnector://<user>:<password>@<host>[:<port>]/<dbname>
 
@@ -30,7 +31,6 @@ if (app.config['DEBUG'] == True):
     app.config['TEMPLATES_AUTO_RELOAD'] = True
 
     toolbar = DebugToolbarExtension(app)
-
 
 loginmanager.init_app(app)
 db.init_app(app)
@@ -68,7 +68,6 @@ def testproteced():
 
 @app.route("/")
 def index():
-    flash("aa", "danger")
     return render_template("index.html")
 
 

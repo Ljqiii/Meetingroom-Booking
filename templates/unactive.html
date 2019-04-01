@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}账户未激活{% endblock %}
+
+{% block body %}
+    <br>
+    <br>
+    <div>
+        <div class="container">
+            <br>
+            {% if (needactive!=True) %}
+                <img src="{{ url_for("static",filename="img/unactive.png") }}" class="rounded mx-auto d-block" alt="">
+                <h3 class="text-center">此账户未激活,等待管理员审核</h3>
+            {% else %}
+                <img src="{{ url_for("static",filename="img/needactive.png") }}" class="rounded mx-auto d-block" alt="">
+                <br>
+                <h3 class="text-center">此角色需要管理员审核通过后才能使用</h3>
+            {% endif %}
+        </div>
+    </div>
+
+
+
+{% endblock %}

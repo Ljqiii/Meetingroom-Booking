@@ -2,16 +2,25 @@
     <div class="container">
         <nav class="navbar navbar-light">
             <a class="navbar-brand" href="{{ url_for("index") }}">
-                <img src="{{ url_for("static",filename="img/booking.png") }}" width="30" alt="">
+                <img src="{{ url_for("static",filename="img/booking.png") }}" width="25" alt="">
                 会议室预定
             </a>
 
-            {% if(current_user.is_anonymous!=True) %}
-                <img src="{{ url_for("static",filename="img/notice.png") }} " width="30">
-                <a href="{{ url_for("auth.me") }}">{{ current_user.username }}</a>
-            {% else %}
-                <a href="{{ url_for("auth.login") }}">登陆</a>
-            {% endif %}
+            <div class="my-2">
+                {% if(current_user.is_anonymous!=True) %}
+                    <span style="margin-right:20px">
+                        <a href="{{ url_for("notification.notification") }}" style="text-decoration: none">
+                            <img src="{{ url_for("static",filename="img/notice.png") }} " width="21">
+                        </a>
+                        {% if(current_user.unread_notification_count!=0) %}
+                            {{ current_user.unread_notification_count }}
+                        {% endif %}
+                    </span>
+                    <a href="{{ url_for("auth.me") }}" style="text-decoration: none">{{ current_user.username }}</a>
+                {% else %}
+                    <a href="{{ url_for("auth.login") }}">登陆</a>
+                {% endif %}
+            </div>
         </nav>
     </div>
 </div>

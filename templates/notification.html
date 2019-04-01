@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}通知{% endblock %}
+
+{% block body %}
+    <br>
+    <br>
+    <div>
+        <div class="container">
+            <div class="row">
+                <div class="col-1"></div>
+                <div class="col-10">
+
+                    {% for notification in notifications %}
+                        <div class="card" style="margin-bottom: 5px ">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-10">
+                                        {{ notification.msg }}
+                                    </div>
+                                    <div class="col-2">
+                                        {% if(not notification.isread) %}
+                                            <a href="{{ url_for("notification.markread",notification_id=notification.id ) }}"
+                                               class="btn btn-primary center-block">标为已读</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+
+                </div>
+                <div class="col-1"></div>
+            </div>
+
+        </div>
+
+    </div>
+    </div>
+
+
+{% endblock %}

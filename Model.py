@@ -39,8 +39,6 @@ class Schedule(db.Model):
 
     useage = db.Column(db.VARCHAR(300), nullable=True)
 
-
-
     __table_args__ = {
         'mysql_charset': "utf8"
     }
@@ -105,6 +103,8 @@ class User(db.Model, UserMixin):
     # 已经预定的教室
     roombooked = db.relationship("Room", secondary="schedule")
 
+    unreadnotificationcount = None
+
     __table_args__ = {
         'mysql_charset': "utf8"
     }
@@ -114,6 +114,15 @@ class User(db.Model, UserMixin):
 
     def validate_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    @property
+    def unread_notification_count(self):
+        if (self.unreadnotificationcount == None):
+            if (self.id != None):
+                self.unreadnotificationcount = Notification.query.filter_by(to_user=self.id).filter_by(isread=False).count()
+                return self.unreadnotificationcount
+            return 0
+        return self.unreadnotificationcount
 
     @property
     def is_active(self):

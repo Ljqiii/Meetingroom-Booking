@@ -1,3 +1,4 @@
+from flask import flash,redirect,url_for
 from flask_login import LoginManager, login_required, login_user, current_user, logout_user
 from Model import User
 loginmanager=LoginManager()
@@ -5,13 +6,8 @@ loginmanager=LoginManager()
 
 @loginmanager.unauthorized_handler
 def unauthorized():
-    # a = request
-    # host_url = request.host_url
-    # full_path = request.full_path
-    # ua = request.headers["User-Agent"]
-    # referer = request.headers["Referer"]
-
-    return "unauthorized"
+    flash("此页面需要登陆","warning")
+    return redirect(url_for("auth.login"))
 
 
 @loginmanager.user_loader

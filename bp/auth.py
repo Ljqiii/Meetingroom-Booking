@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template, flash, redirect
-from flask_login import login_user, login_required, current_user,logout_user
+from flask import Blueprint, render_template, flash, redirect,url_for
+from flask_login import login_user, login_required, current_user, logout_user
 
 from Form import Register, Role, Login
 from Model import User, db
@@ -33,6 +33,8 @@ def registerfun():
         db.session.commit()
 
         u = User.query.filter_by(username=username).first()
+        if (u.is_active == False):
+            return render_template("unactive.html", needactive=True)
         login_user(u)
 
         print(username, password)
@@ -76,6 +78,8 @@ def login():
         user = User.query.filter_by(username=username).first()
         if (user == None or not user.validate_password(password)):
             return render_template("error.html", errmsg="用户名或密码错误!")
+        if (user.is_active == False):
+            return render_template("unactive.html")
 
         login_user(user, remember)
         return redirect("me")
@@ -83,12 +87,21 @@ def login():
 
 
 @authbp.route("/logout")
+@login_required
 def logout():
     logout_user()
     return "logout"
+
 
 @authbp.route("/me")
 @login_required
 def me():
     print(current_user)
     return render_template("me.html")
+
+
+@authbp.route("/unactive")
+def unactive():
+    if(current_user!=None):
+        return redirect(url_for("auth.me"))
+    return render_template("unactive.html")
