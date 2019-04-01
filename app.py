@@ -1,10 +1,11 @@
-from flask import Flask, redirect, url_for, render_template, jsonify, request, flash, get_flashed_messages, \
-    make_response
-from Model import *
+from flask import Flask, redirect, url_for, render_template, jsonify, request, flash, make_response
+from flask_login import login_required, current_user
 import datetime
-from flask_login import LoginManager, login_required, login_user, current_user, logout_user
 
-from bp import auth,room
+from Model import *
+from ext.login_manger import loginmanager
+
+from bp import auth, room
 
 app = Flask(__name__)
 app.register_blueprint(auth.authbp)
@@ -17,7 +18,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:mysql.ljq55
 app.config["SECRET_KEY"] = "super secret key"
 app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
-
 
 # Flask-login settings
 app.config["REMEMBER_COOKIE_DURATION"] = datetime.timedelta(days=10)
@@ -32,9 +32,9 @@ if (app.config['DEBUG'] == True):
     toolbar = DebugToolbarExtension(app)
 
 
-loginmanager = LoginManager(app)
-
+loginmanager.init_app(app)
 db.init_app(app)
+
 
 # db.drop_all(app=app)
 # db.create_all(app=app)
@@ -46,26 +46,6 @@ db.init_app(app)
 # db.session.add(role2)
 # db.session.commit()
 
-
-@loginmanager.unauthorized_handler
-def unauthorized():
-    # a = request
-    # host_url = request.host_url
-    # full_path = request.full_path
-    # ua = request.headers["User-Agent"]
-    # referer = request.headers["Referer"]
-
-    return "unauthorized"
-
-
-@loginmanager.user_loader
-def load_user(user_id):
-    print(user_id)
-    try:
-        user_id = int(user_id)
-    except:
-        user_id = None
-    return User.query.filter_by(id=user_id).first()
 
 @app.route("/avatar/<string:user_id>")
 def getAvatar(user_id):
@@ -88,8 +68,9 @@ def testproteced():
 
 @app.route("/")
 def index():
-    flash("aa","danger")
+    flash("aa", "danger")
     return render_template("index.html")
+
 
 @app.route("/book")
 def booking():
@@ -99,12 +80,6 @@ def booking():
 @app.route("/cancel")
 def cancel():
     return "cancel"
-
-
-@app.route("/logout")
-def logout():
-    logout_user()
-    return "logout"
 
 
 @app.route("/allrole")

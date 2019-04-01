@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, flash, redirect
-from flask_login import login_user, login_required, current_user
+from flask_login import login_user, login_required, current_user,logout_user
 
 from Form import Register, Role, Login
 from Model import User, db
@@ -81,6 +81,11 @@ def login():
         return redirect("me")
     return render_template("login.html", form=loginform)
 
+
+@authbp.route("/logout")
+def logout():
+    logout_user()
+    return "logout"
 
 @authbp.route("/me")
 @login_required
