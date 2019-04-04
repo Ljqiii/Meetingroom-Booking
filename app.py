@@ -5,12 +5,13 @@ import datetime
 from Model import *
 from ext.login_manger import loginmanager
 
-from bp import auth, room, notification
+from bp import auth, room, notification,admin
 
 app = Flask(__name__)
 app.register_blueprint(auth.authbp)
 app.register_blueprint(room.roombp)
 app.register_blueprint(notification.notificationbp)
+app.register_blueprint(admin.adminbp)
 
 # mysql+mysqlconnector://<user>:<password>@<host>[:<port>]/<dbname>
 
@@ -36,56 +37,23 @@ loginmanager.init_app(app)
 db.init_app(app)
 
 
+@app.before_first_request
+def beforefirstreq():
+    #添加管理员角色
+    adminrole = Role.query.filter_by(role_name="admin").first()
+    if (adminrole == None):
+        newadminrole = Role(role_name="admin", need_actice=True)
+        db.session.add(newadminrole)
+        db.session.commit()
+
+
 # db.drop_all(app=app)
 # db.create_all(app=app)
-
-# role1 = Role(id="1", role_name="11", need_actice=True)
-# role2 = Role(id="2", role_name="22", need_actice=True)
-
-# db.session.add(role1)
-# db.session.add(role2)
-# db.session.commit()
-
-
-@app.route("/avatar/<string:user_id>")
-def getAvatar(user_id):
-    return "touxiang"
-
-
-@app.route("/it")
-def insertcurrenttime():
-    now = datetime.datetime.now()
-
-    db.session.commit()
-    return "ok"
-
-
-@app.route("/proteced")
-@login_required
-def testproteced():
-    return "proteced" + str(current_user)
 
 
 @app.route("/")
 def index():
     return render_template("index.html")
-
-
-@app.route("/book")
-def booking():
-    return "booking"
-
-
-@app.route("/cancel")
-def cancel():
-    return "cancel"
-
-
-@app.route("/allrole")
-def allrole():
-    b = Role.query.all()
-    allrolelist = {str(i.id): str(i.need_actice) for i in Role.query.all()}
-    b = 1
 
 
 if __name__ == '__main__':

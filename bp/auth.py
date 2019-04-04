@@ -10,7 +10,6 @@ authbp = Blueprint("auth", __name__, static_folder='static', static_url_path="/s
 @authbp.route("/register", methods=["GET", "POST"])
 def registerfun():
     regform = Register()
-
     if (regform.validate_on_submit()):
         # name = regform.name.data
         username = regform.username.data
@@ -22,12 +21,13 @@ def registerfun():
         if (role not in allrolelist.keys()):
             return render_template("error.html", errmsg="角色不存在!")
 
-        print("role: " + role)
-
         if (User.query.filter_by(username=username).first() != None):
             return render_template("error.html", errmsg="用户已存在,请重新注册!")
-
-        user = User(username=username, role_id=role, isactive=not allrolelist[str(role)])
+        if(username=="admin"):
+            adminrole = Role.query.filter_by(role_name="admin").first()
+            user = User(username="admin", role_id=adminrole.id, isactive=True)
+        else:
+            user = User(username=username, role_id=role, isactive=not allrolelist[str(role)])
         user.setpassword(password)
         db.session.add(user)
         db.session.commit()
@@ -50,11 +50,6 @@ def registerfun():
             haveadmin = True
         return render_template("register.html", form=regform, nothaveadmin=haveadmin)
 
-
-@authbp.route("/hadmin", methods=["GET"])
-def aadmin():
-    haveadmin = User.query.filter_by(username="admin").first()
-    return str(haveadmin)
 
 
 @authbp.route("/addrole", methods=["GET"])
@@ -90,14 +85,23 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return "logout"
+    return redirect(url_for("index"))
 
 
 @authbp.route("/me")
 @login_required
 def me():
     print(current_user)
+    if(current_user.username=="admin" or current_user.role.role_name=="admin"):
+        return redirect(url_for("admin.admin"))
     return render_template("me.html")
+
+
+@authbp.route("/nopermission")
+@login_required
+def nopermission():
+    return render_template("admin/permissiondenied.html")
+
 
 
 @authbp.route("/unactive")
