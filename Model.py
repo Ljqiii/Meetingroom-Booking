@@ -34,10 +34,13 @@ class Schedule(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     room_id = db.Column(db.Integer, db.ForeignKey("room.id"))
 
-    starttime = db.Column(db.Time)
-    endtime = db.Column(db.Time)
+    starttime = db.Column(db.DateTime)
+    endtime = db.Column(db.DateTime)
 
     useage = db.Column(db.VARCHAR(300), nullable=True)
+
+    #预定的人
+    user = db.relationship("User", lazy=True)
 
     __table_args__ = {
         'mysql_charset': "utf8"
@@ -119,7 +122,8 @@ class User(db.Model, UserMixin):
     def unread_notification_count(self):
         if (self.unreadnotificationcount == None):
             if (self.id != None):
-                self.unreadnotificationcount = Notification.query.filter_by(to_user=self.id).filter_by(isread=False).count()
+                self.unreadnotificationcount = Notification.query.filter_by(to_user=self.id).filter_by(
+                    isread=False).count()
                 return self.unreadnotificationcount
             return 0
         return self.unreadnotificationcount
