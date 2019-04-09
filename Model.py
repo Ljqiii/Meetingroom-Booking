@@ -13,6 +13,8 @@ class Room(db.Model):
     roomname = db.Column(db.String(20), unique=True, nullable=False)
     location = db.Column(db.VARCHAR(20), nullable=True)
 
+    need_active = db.Column(db.Boolean, default=0, nullable=False)
+
     department_id = db.Column(db.Integer, db.ForeignKey("department.id"))
 
     department = db.relationship("Department", lazy=True)
@@ -39,7 +41,9 @@ class Schedule(db.Model):
 
     useage = db.Column(db.VARCHAR(300), nullable=True)
 
-    #预定的人
+    is_active=db.Column(db.Boolean, default=1, nullable=False)
+
+    # 预定的人
     user = db.relationship("User", lazy=True)
 
     __table_args__ = {
