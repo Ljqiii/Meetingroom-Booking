@@ -31,3 +31,10 @@ class BookRoom(FlaskForm):
     starttime = StringField("开始时间", validators=[DataRequired()])
     endtime = StringField("结束时间", validators=[DataRequired()])
     comment = StringField("使用", validators=[DataRequired()])
+
+
+class Addroom(FlaskForm):
+    roomname = StringField("房间名", validators=[DataRequired(), Length(1, 20)])
+
+class AddDepartment(FlaskForm):
+    department_name=StringField("系别名称",validators=[DataRequired(), Length(1, 20)])

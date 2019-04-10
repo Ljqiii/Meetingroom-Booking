@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}系管理{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+
+        <h3>添加系</h3>
+        <form action="{{ url_for("admin.departmentmanager") }}" method="post">
+            {{ form.csrf_token }}
+            {{ form.department_name.label }}
+            {{ form.department_name }}
+            <button type="submit" class="btn btn-primary btn-sm">提交</button>
+        </form>
+        <br>
+        <br>
+        <hr>
+        <br>
+        <br>
+        <h3>删除系</h3>
+        <table>
+            <table class="table">
+                {% for i in list %}
+
+                    <tr>
+                        <td>{{ i.department_name }}</td>
+                        <td>
+                            <a href="{{ url_for("admin.deldepartment",id=i.id) }} ">删除</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+
+            </table>
+        </table>
+
+
+    </div>
+
+
+
+{% endblock %}

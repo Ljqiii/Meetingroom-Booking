@@ -4,10 +4,22 @@
 
 {% block body %}
 
+    角色:{{ current_user.role.role_name }}<br>
+    username:{{ current_user.username }}<br>
+    <hr>
+
     <a href="{{ url_for("admin.roommanage") }}">教室管理</a>
+    <a href="{{ url_for("admin.departmentmanager") }}">系管理</a>
+
     <a href="">用户管理</a>
     <a href=""></a>
+
     <a href="{{ url_for("auth.logout") }}"></a>
+
+    <hr>
+
+
+
 
 
 {% endblock %}

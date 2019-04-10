@@ -7,11 +7,16 @@
     <div class="container" style="margin-top: 20px">
         <div class="row">
             <div class="col-md-3">
-                <ul class="list-group">
-                    {% for i in model["roomlist"] %}
-                        <li class="list-group-item {% if(roomname==i.roomname) %}active{% endif %}">{{ i.roomname }}</li>
-                    {% endfor %}
+                <ul class="list-group list-group-flush">
+                    <h3 class="list-group-item text-center">教室列表</h3>
                 </ul>
+
+                <div class="list-group" style="margin-bottom: 15px">
+                    {% for i in model["roomlist"] %}
+                        <a href="{{ url_for("room.roomstatus", roomname=i.roomname) }}"
+                           class="list-group-item list-group-item-action {% if(model["roomname"]==i.roomname) %}active disabled{% endif %}">{{ i.roomname }}</a>
+                    {% endfor %}
+                </div>
             </div>
             <div class="col-md-9">
                 <table class="table table-light">
@@ -24,9 +29,9 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for i in range(1,8) %}
+                    {% for i in range(1,11) %}
                         <tr>
-                            <th scope="row">{{ i }}</th>
+                            <th scope="row">第{{ i }}节课</th>
 
                             <td><a href="#">asdf</a></td>
                             <td>345</td>

@@ -22,7 +22,7 @@ def registerfun():
             return render_template("error.html", errmsg="角色不存在!")
 
         if (User.query.filter_by(username=username).first() != None):
-            return render_template("error.html", errmsg="用户已存在,请重新注册!")
+            return render_template("error.html", errmsg="用户已存在,请直接登陆!")
         if(username=="admin"):
             adminrole = Role.query.filter_by(role_name="admin").first()
             user = User(username="admin", role_id=adminrole.id, isactive=True)
