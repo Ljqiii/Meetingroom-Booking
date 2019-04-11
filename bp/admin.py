@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, flash, redirect, url_for,request
+from flask import Blueprint, render_template, flash, redirect, url_for, request
 from flask_login import login_user, login_required, current_user, logout_user
 
 from Form import *
@@ -24,7 +24,7 @@ def admin():
 @adminbp.route("/roommanage")
 @login_required
 def roommanage():
-    return render_template("admin/roommanage.html")
+    return render_template("admin/roommanager.html")
 
 
 @adminbp.route("/manage/room", methods=["GET", "POST"])
@@ -47,7 +47,7 @@ def departmentmanager():
         except:
             flash("添加失败", "danger")
     else:
-        if(request.method=="POST"):
+        if (request.method == "POST"):
             flash("数据验证失败", "danger")
 
     departmentlist = Department.query.all()
@@ -67,8 +67,22 @@ def deldepartment(id):
     return redirect(url_for("admin.departmentmanager"))
 
 
-
 @adminbp.route("/manage/changepasswd", methods=["GET", "POST"])
 @login_required
 def changepasswd():
-    pass
+    form = ChangePasswd()
+    if (form.validate_on_submit()):
+        u = form.username.data
+        p = form.password.data
+        user = User.query.filter_by(username=u).first()
+        if (user == None):
+            flash("用户不存在", "warning")
+        else:
+            user.setpassword(p)
+            db.session.add(user)
+            db.session.commit()
+
+            flash("修改" + u + "的密码成功", "success")
+        return redirect(url_for("admin.changepasswd"))
+    else:
+        return render_template("admin/passwdmanager.html", form=form)

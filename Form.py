@@ -36,5 +36,11 @@ class BookRoom(FlaskForm):
 class Addroom(FlaskForm):
     roomname = StringField("房间名", validators=[DataRequired(), Length(1, 20)])
 
+
 class AddDepartment(FlaskForm):
-    department_name=StringField("系别名称",validators=[DataRequired(), Length(1, 20)])
+    department_name = StringField("系别名称", validators=[DataRequired(), Length(1, 20)])
+
+
+class ChangePasswd(FlaskForm):
+    username = StringField("用户名", validators=[DataRequired(), Length(2, 20, message="用户名必须在6-20字符之间")])
+    password = PasswordField("新密码", validators=[DataRequired(), Length(6, 20, message="密码必须在6-20字符之间")])

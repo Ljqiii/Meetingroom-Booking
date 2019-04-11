@@ -8,10 +8,10 @@
     username:{{ current_user.username }}<br>
     <hr>
 
-    <a href="{{ url_for("admin.roommanage") }}">教室管理</a>
-    <a href="{{ url_for("admin.departmentmanager") }}">系管理</a>
+    <a href="{{ url_for("admin.roommanage") }} " target="_blank">教室管理</a>
+    <a href="{{ url_for("admin.departmentmanager") }}" target="_blank">系管理</a>
 
-    <a href="">用户管理</a>
+    <a href="{{ url_for("admin.changepasswd") }}">用户管理</a>
     <a href=""></a>
 
     <a href="{{ url_for("auth.logout") }}"></a>
