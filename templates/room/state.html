@@ -30,11 +30,22 @@
                     </thead>
                     <tbody>
                     {% for i in range(1,11) %}
+                        {#i 第几节课#}
                         <tr>
                             <th scope="row">第{{ i }}节课</th>
+                            {% for ii in range(0,7) %}
+                                {#ii 和今天相差几天#}
+                                <td>
+                                    {% if ((ii,i) in model["schedule"]) %}
+                                        {{ model["schedule"][(ii,i)]["username"] }}
+                                        <br>用途:{{ model["schedule"][(ii,i)]["useage"] }}
 
-                            <td><a href="#">asdf</a></td>
-                            <td>345</td>
+                                    {% else %}
+                                        <a href="#">{{ i }},{{ ii }}</a>
+                                    {% endif %}
+
+                                </td>
+                            {% endfor %}
                         </tr>
 
 

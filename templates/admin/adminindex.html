@@ -4,19 +4,26 @@
 
 {% block body %}
 
-    角色:{{ current_user.role.role_name }}<br>
-    username:{{ current_user.username }}<br>
-    <hr>
+    <br>
+    <br>
 
-    <a href="{{ url_for("admin.roommanage") }} " target="_blank">教室管理</a>
-    <a href="{{ url_for("admin.departmentmanager") }}" target="_blank">系管理</a>
+    <div class="container">
+        {{ current_user.role.role_name }}<br>
+        用户名:{{ current_user.username }}<br>
+        <a href="{{ url_for("auth.logout") }}">退出登陆</a>
+        <hr>
 
-    <a href="{{ url_for("admin.changepasswd") }}">用户管理</a>
-    <a href=""></a>
+        <div class="list-group">
+            <a class="list-group-item" href="{{ url_for("admin.roommanage") }} " target="_blank">教室管理</a>
+            <a class="list-group-item" href="{{ url_for("admin.departmentmanager") }}" target="_blank">系别管理</a>
+            <a class="list-group-item" href="{{ url_for("admin.changepasswd") }}" target="_blank">修改其他用户密码</a>
+            <a class="list-group-item" href="{{ url_for("admin.unactiveusermanager") }}" target="_blank">未激活的用户审核</a>
 
-    <a href="{{ url_for("auth.logout") }}"></a>
+            <a class="list-group-item" href="">批量添加用户</a>
 
-    <hr>
+
+        </div>
+    </div>
 
 
 

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}用户管理{% endblock %}
+
+{% block body %}
+    <br>
+    <div class="container">
+        <h3 class="text-center">未激活的用户</h3>
+        <br>
+        <table class="table">
+            {% for i in userlist %}
+                <tr>
+                    <td>
+                        用户名:
+                        <spen><strong>{{ i.username }}</strong></spen>
+                    </td>
+
+                    <td>
+                        <a href="{{ url_for("admin.activeuser",userid=i.id) }}" class="btn-sm btn btn-primary"
+                           style="margin-right: 10px">激活此用户</a>
+
+                        <a href="{{ url_for("admin.deleteuser",userid=i.id) }}" class="btn-sm btn btn-primary">删除此用户</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+
+
+    </div>
+
+
+
+{% endblock %}

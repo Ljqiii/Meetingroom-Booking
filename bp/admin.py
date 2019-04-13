@@ -86,3 +86,37 @@ def changepasswd():
         return redirect(url_for("admin.changepasswd"))
     else:
         return render_template("admin/passwdmanager.html", form=form)
+
+
+@adminbp.route("/manage/unactiveuser", methods=["GET", "POST"])
+@login_required
+def unactiveusermanager():
+    unactive_user_list = User.query.filter_by(isactive=False).all()
+    return render_template("admin/unactiveusermanager.html",userlist=unactive_user_list)
+
+
+@adminbp.route("/manage/active/<int:userid>", methods=["GET"])
+@login_required
+def activeuser(userid):
+    user = User.query.filter_by(id=userid).filter_by(isactive=False).first()
+    if (user == None):
+        flash("用户不存在", "warning")
+    else:
+        user.isactive = True
+        db.session.add(user)
+        db.session.commit()
+        flash("激活用户成功", "success")
+    return redirect(url_for("admin.unactiveusermanager"))
+
+@adminbp.route("/manage/delete/<int:userid>", methods=["GET"])
+@login_required
+def deleteuser(userid):
+    user = User.query.filter_by(id=userid).filter_by(isactive=False).first()
+    if (user == None):
+        flash("用户不存在", "warning")
+    else:
+        user.isactive = True
+        db.session.delete(user)
+        db.session.commit()
+        flash("删除用户成功", "success")
+    return redirect(url_for("admin.unactiveusermanager"))
