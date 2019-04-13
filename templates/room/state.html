@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ model["roomname"] }}{% endblock %}
+{% block title %}{{ model["room"]["roomname"] }}{% endblock %}
 
 {% block body %}
 
@@ -14,7 +14,7 @@
                 <div class="list-group" style="margin-bottom: 15px">
                     {% for i in model["roomlist"] %}
                         <a href="{{ url_for("room.roomstatus", roomname=i.roomname) }}"
-                           class="list-group-item list-group-item-action {% if(model["roomname"]==i.roomname) %}active disabled{% endif %}">{{ i.roomname }}</a>
+                           class="list-group-item list-group-item-action {% if(model["room"]["roomname"]==i.roomname) %}active disabled{% endif %}">{{ i.roomname }}</a>
                     {% endfor %}
                 </div>
             </div>
@@ -35,16 +35,32 @@
                             <th scope="row">第{{ i }}节课</th>
                             {% for ii in range(0,7) %}
                                 {#ii 和今天相差几天#}
-                                <td>
-                                    {% if ((ii,i) in model["schedule"]) %}
-                                        {{ model["schedule"][(ii,i)]["username"] }}
-                                        <br>用途:{{ model["schedule"][(ii,i)]["useage"] }}
 
-                                    {% else %}
-                                        <a href="#">{{ i }},{{ ii }}</a>
-                                    {% endif %}
 
-                                </td>
+                                {% if ((ii,i) in model["schedule"]) %}
+                                    <td style="background-color: #bee5eb;">
+                                        <span data-toggle="tooltip"
+
+                                              data-html="true"
+                                              title="已被{{ model["schedule"][(ii,i)]["username"] }}预定&#10;&#13;用途:{{ model["schedule"][(ii,i)]["useage"] }}"
+                                              style="cursor:pointer">
+                                           已被预定
+                                        </span>
+
+                                        {#                                        {{ model["schedule"][(ii,i)]["username"] }}#}
+                                        {#                                        <br>用途:{{ model["schedule"][(ii,i)]["useage"] }}#}
+                                    </td>
+                                {% else %}
+                                    <td style="background-color: #eeeeee">
+                                        <a class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"
+                                           data-whatever="{{ model["room"]["roomname"] }}" data-classn="{{ i }}"
+                                           data-daysdelta="{{ ii }}">
+                                            {{ i }},{{ ii }}
+                                        </a>
+                                    </td>
+                                {% endif %}
+
+
                             {% endfor %}
                         </tr>
 
@@ -57,6 +73,9 @@
 
 
             </div>
+
+            {% include "room/bookingmodal.html" %}
+
         </div>
     </div>
 

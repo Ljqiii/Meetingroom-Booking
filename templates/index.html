@@ -9,6 +9,61 @@
     <a href="register">register</a><br>
     <a href="logout">logout</a><br>
 
+    <hr>
+
+    <a class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">
+        Open modal for @mdo
+    </a>
 
 
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">预定教室</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <input type="hidden" id="needactive" value="123123">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="roomid">
+                        </div>
+                        <div class="form-group">
+                            <label for="usage-text" class="col-form-label">用途:</label>
+                            <textarea class="form-control" id="usage-text"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnsubmit">Send message</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var modal = null;
+        $('#exampleModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var recipient = button.data('whatever') // Extract info from data-* attributes
+            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            modal = $(this)
+            modal.find('.modal-title').text('New message to ' + recipient)
+            modal.find('.modal-body #roomid').val(recipient)
+            {#modal.find('.modal-body #needactive').val("hidden")#}
+        })
+        $("#btnsubmit").on("click", function (e) {
+            console.log(modal.find('.modal-body #roomid').val())
+            console.log(modal.find('.modal-body #needactive').val())
+            console.log(modal.find('.modal-body textarea').val())
+
+        })
+
+    </script>
 {% endblock %}

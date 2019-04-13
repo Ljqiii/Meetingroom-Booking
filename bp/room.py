@@ -28,7 +28,8 @@ def roomstatus(roomname):
     model["date"] = []
 
     model["roomlist"] = roomlist  # 所有会议室
-    model["roomname"] = roomname  # 当前会议室
+    model["room"] = {"roomname": roomname, "roomid": thisroomid.id, "needactive": thisroomid.need_active}
+
 
     model["schedule"] = {}
 
@@ -52,9 +53,7 @@ def roomstatus(roomname):
         dayscha_delta = si.class_date - today  # datetime.timedelta
         dayscha = dayscha_delta.days  # 和今天相差几天
 
-        # model["schedule"].append({"dayscha": dayscha, "class_n": si.class_n, "user": si.user.username})
-        # model["schedule"].append({"dayscha": dayscha, "class_n": si.class_n, "user": si.user.username})
-        model["schedule"][(dayscha, si.class_n)] = {"username":si.user.username,"useage":si.useage}
+        model["schedule"][(dayscha, si.class_n)] = {"username": si.user.username, "useage": si.useage}
 
     for i in roomlist:
         if (roomname == i.roomname):
@@ -62,3 +61,6 @@ def roomstatus(roomname):
     return render_template("error.html", errmsg="未找到此教室")
 
 
+@roombp.route("/booking/<int:roomid>")
+def bookaroom(roomid):
+    return roomid
