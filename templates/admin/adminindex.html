@@ -14,6 +14,8 @@
         <hr>
 
         <div class="list-group">
+
+            <a class="list-group-item" href="{{ url_for("admin.schedulemanager") }} " target="_blank">需要审核的已经预定的教室</a>
             <a class="list-group-item" href="{{ url_for("admin.roommanage") }} " target="_blank">教室管理</a>
             <a class="list-group-item" href="{{ url_for("admin.departmentmanager") }}" target="_blank">系别管理</a>
             <a class="list-group-item" href="{{ url_for("admin.changepasswd") }}" target="_blank">修改其他用户密码</a>

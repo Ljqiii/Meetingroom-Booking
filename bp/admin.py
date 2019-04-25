@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, flash, redirect, url_for, request
 from flask_login import login_user, login_required, current_user, logout_user
 
+import datetime
 from Form import *
 from Model import *
 
@@ -92,7 +93,7 @@ def changepasswd():
 @login_required
 def unactiveusermanager():
     unactive_user_list = User.query.filter_by(isactive=False).all()
-    return render_template("admin/unactiveusermanager.html",userlist=unactive_user_list)
+    return render_template("admin/unactiveusermanager.html", userlist=unactive_user_list)
 
 
 @adminbp.route("/manage/active/<int:userid>", methods=["GET"])
@@ -108,6 +109,7 @@ def activeuser(userid):
         flash("激活用户成功", "success")
     return redirect(url_for("admin.unactiveusermanager"))
 
+
 @adminbp.route("/manage/delete/<int:userid>", methods=["GET"])
 @login_required
 def deleteuser(userid):
@@ -120,3 +122,17 @@ def deleteuser(userid):
         db.session.commit()
         flash("删除用户成功", "success")
     return redirect(url_for("admin.unactiveusermanager"))
+
+
+@adminbp.route("/manage/schedule", methods=["GET"])
+@login_required
+def schedulemanager():
+    year = datetime.datetime.now().year
+    month = datetime.datetime.now().month
+    day = datetime.datetime.now().day
+    today = datetime.date(year, month, day)
+
+    unactivelist = Schedule.query.filter(Schedule.is_active == 0).filter(Schedule.class_date >= today).all()
+
+
+    return render_template("admin/schedulemanager.html", unactivelist=unactivelist)

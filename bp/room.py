@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, flash, redirect
+from amqp.spec import method
+from flask import Blueprint, render_template, flash, redirect, request, url_for
 from flask_login import login_user, login_required, current_user
 import calendar
 import datetime
@@ -30,7 +31,6 @@ def roomstatus(roomname):
     model["roomlist"] = roomlist  # 所有会议室
     model["room"] = {"roomname": roomname, "roomid": thisroomid.id, "needactive": thisroomid.need_active}
 
-
     model["schedule"] = {}
 
     year = datetime.datetime.now().year
@@ -61,6 +61,32 @@ def roomstatus(roomname):
     return render_template("error.html", errmsg="未找到此教室")
 
 
-@roombp.route("/booking/<int:roomid>")
-def bookaroom(roomid):
-    return roomid
+@login_required
+@roombp.route("/booking/", methods=["POST"])
+def bookaroom():
+    roomname = request.form["roomname"]
+    classn = request.form["classn"]
+    daysdelta = int(request.form["daysdelta"])
+    useage = request.form["useage"]
+
+    year = datetime.datetime.now().year
+    month = datetime.datetime.now().month
+    day = datetime.datetime.now().day
+    today = datetime.date(year, month, day)
+
+    class_date = today + datetime.timedelta(days=daysdelta)
+
+    room = Room.query.filter_by(roomname=roomname).first()
+    if (room == None):
+        return render_template("error.html", "房间未找到")
+    else:
+        s = Schedule(user_id=current_user.id, room_id=room.id, class_n=classn, class_date=class_date, useage=useage,
+                     is_active=not room.need_active)
+        db.session.add(s)
+        db.session.commit()
+        if (room.need_active):
+            flash("等待管理员审核", "warning")
+        else:
+            flash("预定成功", "success")
+
+        return redirect(url_for("room.roomstatus",roomname=roomname))

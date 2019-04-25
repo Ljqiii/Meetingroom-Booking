@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}需要审核的预定的教室管理{% endblock %}
+
+{% block body %}
+
+    <div class="container text-center" style="">
+
+
+        <br>
+        <br>
+        {% if(unactivelist|length)==0 %}
+            <h2>没有需要审核的教室</h2>
+        {% else %}
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">教室</th>
+                    <th scope="col">预定人</th>
+                    <th scope="col">预定时间</th>
+                    <th scope="col">用途</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for i in unactivelist %}
+                    <tr>
+                        <form action="">
+                            <td>{{ i.room.roomname }}</td>
+                            <td>{{ i.user.username }}</td>
+                            <td> {{ i.class_date }},第{{ i.class_n }}节课</td>
+                            <td>{{ i.useage }}</td>
+
+                            <td>
+                                <input type="submit" class="btn btn-primary" value="审核通过"/>
+                            </td>
+                            <td>
+                                <input type="submit" class="btn btn-primary" value="删除"/>
+                            </td>
+                        </form>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+
+        {% endif %}
+
+
+    </div>
+
+
+
+{% endblock %}

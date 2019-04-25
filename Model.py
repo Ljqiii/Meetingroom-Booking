@@ -36,21 +36,21 @@ class Schedule(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     room_id = db.Column(db.Integer, db.ForeignKey("room.id"))
 
-    #使用开始/结束时间
+    # 使用开始/结束时间
     starttime = db.Column(db.DateTime)
     endtime = db.Column(db.DateTime)
 
-    #使用第几天的第几节课
-    class_n=db.Column(db.Integer)
-    class_date=db.Column(db.Date)
-
+    # 使用第几天的第几节课
+    class_n = db.Column(db.Integer)
+    class_date = db.Column(db.Date)
 
     useage = db.Column(db.VARCHAR(300), nullable=True)
 
-    is_active=db.Column(db.Boolean, default=1, nullable=False)
+    is_active = db.Column(db.Boolean, default=1, nullable=False)
 
     # 预定的人
     user = db.relationship("User", lazy=True)
+    room = db.relationship("Room", lazy=True)
 
     __table_args__ = {
         'mysql_charset': "utf8"

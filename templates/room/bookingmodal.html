@@ -9,26 +9,32 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form>
-                    <input type="hidden" id="needactive" value="{{ model["room"]["needactive"] }}">
-                    <input type="text" id="classn">
-                    <input type="text" id="daysdelta">
+                <input type="hidden" id="needactive" value="{{ model["room"]["needactive"] }}">
+                <form method="post" action="{{ url_for("room.bookaroom") }}">
+                    <input type="text" id="roomname" name="roomname">
+                    <input type="text" id="classn" name="classn">
+                    <input type="text" id="daysdelta" name="daysdelta">
 
                     <input type="hidden" class="form-control" id="roomid"
                            value="{{ model["room"]["roomid"] }}">
                     <div class="form-group">
                         <label for="usage-text" class="col-form-label">预定此教室的用途:</label>
-                        <textarea class="form-control" id="usage-text"></textarea>
+                        <input class="form-control" id="usage-text" name="useage"></input>
                     </div>
+
+                    {% if (model["room"]["needactive"]==True) %}
+                        <span class="text-sm-center text-md-right text-danger"
+                              style="margin-right: 10px">预定此教室需要管理员审核</span>
+                    {% endif %}
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                        <button type="submit" class="btn btn-primary" id="btnsubmit">预定</button>
+                    </div>
+
                 </form>
             </div>
-            {% if (model["room"]["needactive"]==True) %}
-                <span class="text-sm-center text-md-right text-danger" style="margin-right: 10px">预定此教室需要管理员审核</span>
-            {% endif %}
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary" id="btnsubmit">预定</button>
-            </div>
+
         </div>
     </div>
 </div>
@@ -43,9 +49,9 @@
         var daysdelta = button.data('daysdelta') // Extract info from data-* attributes
 
 
-
         modal = $(this)
         modal.find('.modal-title').text('预定教室' + recipient)
+        modal.find('#roomname').val({{ model["room"]["roomname"] }})
         modal.find('#classn').val(classn)
         modal.find('#daysdelta').val(daysdelta)
 
