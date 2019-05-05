@@ -85,9 +85,13 @@ def bookaroom():
     else:
         s = Schedule(user_id=current_user.id, room_id=room.id, class_n=classn, class_date=class_date, useage=useage,
                      is_active=not room.need_active)
+        #admin不需要激活
+        if(current_user.role.role_name=="admin"):
+            s.is_active=True
+
         db.session.add(s)
         db.session.commit()
-        if (room.need_active):
+        if (room.need_active and not current_user.role.role_name=="admin"):
             flash("等待管理员审核", "warning")
         else:
             flash("预定成功", "success")
