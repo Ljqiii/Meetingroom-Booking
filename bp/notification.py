@@ -3,7 +3,7 @@ from flask_login import login_user, login_required, current_user, logout_user
 
 from Form import Register, Role, Login
 from Model import db, Notification
-
+from utils import notificationutil
 notificationbp = Blueprint("notification", __name__, static_folder='static', static_url_path="/static",
                            template_folder="templates")
 
@@ -18,10 +18,12 @@ def notification():
 @notificationbp.route("/markread/<int:notification_id>")
 @login_required
 def markread(notification_id):
-    n = Notification.query.filter_by(id=notification_id).filter_by(to_user=current_user.id).first()
-    if (n != None):
-        n.isread = True
-        db.session.add(n)
-        db.session.commit()
-        flash("已标为已读","warning")
+    notificationutil.markasread(notification_id)
+    return (redirect(url_for("notification.notification")))
+
+
+@notificationbp.route("/delete/<int:notification_id>")
+@login_required
+def delete(notification_id):
+    notificationutil.deletenoti(notification_id)
     return (redirect(url_for("notification.notification")))

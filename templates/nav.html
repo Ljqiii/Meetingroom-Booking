@@ -18,6 +18,7 @@
                     </span>
                     <a href="{{ url_for("auth.me") }}" style="text-decoration: none">{{ current_user.username }}</a>
                 {% else %}
+                    <a href="{{ url_for("auth.registerfun") }}" style="margin-right: 5px">注册</a>
                     <a href="{{ url_for("auth.login") }}">登陆</a>
                 {% endif %}
             </div>

@@ -8,10 +8,14 @@
     <br>
 
     <div class="container">
-        {{ current_user.role.role_name }}<br>
-        用户名:{{ current_user.username }}<br>
-        <a href="{{ url_for("auth.logout") }}">退出登陆</a>
-        <hr>
+        <div class="text-center h3" style="margin-bottom: 20px">
+            {{ current_user.role.role_name }}<br>
+            用户名:{{ current_user.username }}<br>
+            <a href="{{ url_for("auth.logout") }}">退出登陆</a>
+            <hr>
+
+        </div>
+
 
         <div class="list-group">
 

@@ -18,6 +18,9 @@ def roomstate():
 
 @roombp.route("/room/<string:roomname>")
 def roomstatus(roomname):
+
+    loginform = Login()
+
     roomlist = list(Room.query.all())
 
     thisroomid = Room.query.filter(Room.roomname == roomname).first()
@@ -57,7 +60,7 @@ def roomstatus(roomname):
 
     for i in roomlist:
         if (roomname == i.roomname):
-            return render_template("room/state.html", model=model)
+            return render_template("room/state.html", model=model,form=loginform)
     return render_template("error.html", errmsg="未找到此教室")
 
 
@@ -89,4 +92,4 @@ def bookaroom():
         else:
             flash("预定成功", "success")
 
-        return redirect(url_for("room.roomstatus",roomname=roomname))
+        return redirect(url_for("room.roomstatus", roomname=roomname))

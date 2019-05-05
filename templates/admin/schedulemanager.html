@@ -33,10 +33,12 @@
                             <td>{{ i.useage }}</td>
 
                             <td>
-                                <input type="submit" class="btn btn-primary" value="审核通过"/>
+                                <a href="{{ url_for("admin.passschedule",roomname= i.room.roomname,username=i.user.username,class_date=i.class_date,class_n=i.class_n) }}"
+                                   class="btn btn-primary">审核通过</a>
                             </td>
                             <td>
-                                <input type="submit" class="btn btn-primary" value="删除"/>
+                                <a href="{{ url_for("admin.deleteschedule",roomname= i.room.roomname,username=i.user.username,class_date=i.class_date,class_n=i.class_n) }}"
+                                   class="btn btn-primary">删除</a>
                             </td>
                         </form>
                     </tr>

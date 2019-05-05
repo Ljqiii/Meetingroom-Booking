@@ -10,7 +10,6 @@
                 <ul class="list-group list-group-flush">
                     <h3 class="list-group-item text-center">教室列表</h3>
                 </ul>
-
                 <div class="list-group" style="margin-bottom: 15px">
                     {% for i in model["roomlist"] %}
                         <a href="{{ url_for("room.roomstatus", roomname=i.roomname) }}"
@@ -35,8 +34,6 @@
                             <th scope="row">第{{ i }}节课</th>
                             {% for ii in range(0,7) %}
                                 {#ii 和今天相差几天#}
-
-
                                 {% if ((ii,i) in model["schedule"]) %}
                                     <td style="background-color: #bee5eb;">
                                         <span data-toggle="tooltip"
@@ -55,25 +52,16 @@
                                         <a class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"
                                            data-whatever="{{ model["room"]["roomname"] }}" data-classn="{{ i }}"
                                            data-daysdelta="{{ ii }}">
-                                            {{ i }},{{ ii }}
+                                            预定
                                         </a>
                                     </td>
                                 {% endif %}
-
-
                             {% endfor %}
                         </tr>
-
-
                     {% endfor %}
-
-
                     </tbody>
                 </table>
-
-
             </div>
-
             {% include "room/bookingmodal.html" %}
 
         </div>

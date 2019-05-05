@@ -1,70 +1,115 @@
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">预定教室</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="needactive" value="{{ model["room"]["needactive"] }}">
-                <form method="post" action="{{ url_for("room.bookaroom") }}">
-                    <input type="text" id="roomname" name="roomname">
-                    <input type="text" id="classn" name="classn">
-                    <input type="text" id="daysdelta" name="daysdelta">
 
-                    <input type="hidden" class="form-control" id="roomid"
-                           value="{{ model["room"]["roomid"] }}">
-                    <div class="form-group">
-                        <label for="usage-text" class="col-form-label">预定此教室的用途:</label>
-                        <input class="form-control" id="usage-text" name="useage"></input>
+{#未登录#}
+{% if(current_user.is_authenticated==False) %}
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">需要登陆</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <form class="form-signin" method="post" action="/login">
+                            {{ form.csrf_token }}
+                            <h2>登陆</h2>
+                            <p>
+
+                                <label for="username" class="sr-only">{{ form.username.label }}</label>
+                                {{ form.username(class="form-control",placeholder="Username" ) }}
+
+                            </p>
+                            <p>
+                                <label for="username" class="sr-only">{{ form.password.label }}</label>
+                                {{ form.password(class="form-control",placeholder="Password" ) }}
+                            </p>
+                            {{ form.remember }}
+                            {{ form.remember.label }}
+                            <button class="btn btn-lg btn-primary btn-block" type="submit" style="margin-bottom: 15px">登陆</button>
+                        </form>
                     </div>
 
-                    {% if (model["room"]["needactive"]==True) %}
-                        <span class="text-sm-center text-md-right text-danger"
-                              style="margin-right: 10px">预定此教室需要管理员审核</span>
-                    {% endif %}
 
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                        <button type="submit" class="btn btn-primary" id="btnsubmit">预定</button>
-                    </div>
+                </div>
 
-                </form>
             </div>
-
         </div>
     </div>
-</div>
 
-<script>
-    var modal = null;
-    $('#exampleModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget) // Button that triggered the modal
-        var recipient = button.data('whatever') // Extract info from data-* attributes
+{#已经登录#}
+{% else %}
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">预定教室</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="needactive" value="{{ model["room"]["needactive"] }}">
+                    <form method="post" action="{{ url_for("room.bookaroom") }}">
+                        <input type="text" id="roomname" name="roomname">
+                        <input type="text" id="classn" name="classn">
+                        <input type="text" id="daysdelta" name="daysdelta">
 
-        var classn = button.data('classn') // Extract info from data-* attributes
-        var daysdelta = button.data('daysdelta') // Extract info from data-* attributes
+                        <input type="hidden" class="form-control" id="roomid"
+                               value="{{ model["room"]["roomid"] }}">
+                        <div class="form-group">
+                            <label for="usage-text" class="col-form-label">预定此教室的用途:</label>
+                            <input class="form-control" id="usage-text" name="useage"></input>
+                        </div>
+
+                        {% if (model["room"]["needactive"]==True) %}
+                            <span class="text-sm-center text-md-right text-danger"
+                                  style="margin-right: 10px">预定此教室需要管理员审核</span>
+                        {% endif %}
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                            <button type="submit" class="btn btn-primary" id="btnsubmit">预定</button>
+                        </div>
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var modal = null;
+        $('#exampleModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var recipient = button.data('whatever') // Extract info from data-* attributes
+
+            var classn = button.data('classn') // Extract info from data-* attributes
+            var daysdelta = button.data('daysdelta') // Extract info from data-* attributes
 
 
-        modal = $(this)
-        modal.find('.modal-title').text('预定教室' + recipient)
-        modal.find('#roomname').val({{ model["room"]["roomname"] }})
-        modal.find('#classn').val(classn)
-        modal.find('#daysdelta').val(daysdelta)
+            modal = $(this)
+            modal.find('.modal-title').text('预定教室' + recipient)
+            modal.find('#roomname').val({{ model["room"]["roomname"] }})
+            modal.find('#classn').val(classn)
+            modal.find('#daysdelta').val(daysdelta)
 
-        //modal.find('.modal-body #roomid').val(recipient)
-        //modal.find('.modal-body #needactive').val("hidden")
-    })
-    $("#btnsubmit").on("click", function (e) {
-        console.log(modal.find('.modal-body #roomid').val())
-        console.log(modal.find('.modal-body #needactive').val())
-        console.log(modal.find('.modal-body textarea').val())
+            //modal.find('.modal-body #roomid').val(recipient)
+            //modal.find('.modal-body #needactive').val("hidden")
+        })
+        $("#btnsubmit").on("click", function (e) {
+            console.log(modal.find('.modal-body #roomid').val())
+            console.log(modal.find('.modal-body #needactive').val())
+            console.log(modal.find('.modal-body textarea').val())
 
-        console.log(modal.find('.modal-body #classn').val())
-        console.log(modal.find('.modal-body #daysdelta').val())
-    })
+            console.log(modal.find('.modal-body #classn').val())
+            console.log(modal.find('.modal-body #daysdelta').val())
+        })
 
-</script>
+    </script>
+{% endif %}
+

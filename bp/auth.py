@@ -77,7 +77,7 @@ def login():
             return render_template("unactive.html")
 
         login_user(user, remember)
-        return redirect("me")
+        return redirect(url_for("index"))
     return render_template("login.html", form=loginform)
 
 

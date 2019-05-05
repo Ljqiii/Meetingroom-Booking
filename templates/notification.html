@@ -9,25 +9,32 @@
             <div class="row">
                 <div class="col-1"></div>
                 <div class="col-10">
-
-                    {% for notification in notifications %}
-                        <div class="card" style="margin-bottom: 5px ">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-10">
-                                        {{ notification.msg }}
-                                    </div>
-                                    <div class="col-2">
-                                        {% if(not notification.isread) %}
-                                            <a href="{{ url_for("notification.markread",notification_id=notification.id ) }}"
-                                               class="btn btn-primary center-block">标为已读</a>
-                                        {% endif %}
+                    {% if notifications|length == 0 %}
+                        <h3 class="text-center">没有通知</h3>
+                    {% else %}
+                        {% for notification in notifications %}
+                            <div class="card" style="margin-bottom: 5px ">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            {{ notification.msg }}
+                                        </div>
+                                        <div class="col-2">
+                                            {% if(not notification.isread) %}
+                                                <a href="{{ url_for("notification.markread",notification_id=notification.id ) }}"
+                                                   class="btn btn-primary center-block">标为已读</a>
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-2">
+                                            <a href="{{ url_for("notification.delete",notification_id=notification.id ) }}"
+                                               class="btn btn-primary center-block">删除</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    {% endfor %}
+                        {% endfor %}
 
+                    {% endif %}
 
                 </div>
                 <div class="col-1"></div>

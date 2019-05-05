@@ -55,27 +55,33 @@ def beforefirstreq():
 @app.cli.command()
 @click.option("--drop", is_flag=True, help="drop all database")
 def dropdb(drop):
-    if(drop):
+    if (drop):
         db.drop_all()
+
 
 @app.cli.command()
 @click.option("--create", is_flag=True, help="create all database")
 def dropdb(drop):
-    if(drop):
+    if (drop):
         db.create_all()
+
 
 @app.cli.command()
 def initdb():
     """Initialize the database."""
     click.echo('Init the db')
 
-# @app.errorhandler(500)
 
+# @app.errorhandler(500)
 
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    roomlist = Room.query.all()
+    roomname_1 = roomlist[0].roomname
+    return redirect(url_for("room.roomstatus", roomname=roomname_1))
+
+    # return render_template("index.html", roomlist=roomlist)
 
 
 if __name__ == '__main__':

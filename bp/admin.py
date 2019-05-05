@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, flash, redirect, url_for, request
 from flask_login import login_user, login_required, current_user, logout_user
+from utils import notificationutil
 
 import datetime
 from Form import *
@@ -134,5 +135,48 @@ def schedulemanager():
 
     unactivelist = Schedule.query.filter(Schedule.is_active == 0).filter(Schedule.class_date >= today).all()
 
-
     return render_template("admin/schedulemanager.html", unactivelist=unactivelist)
+
+
+@adminbp.route("/manage/deleteschedule/<int:roomname>/<string:username>/<string:class_date>/<string:class_n>/",
+               methods=["GET"])
+@login_required
+def deleteschedule(roomname, username, class_date, class_n):
+    room = Room.query.filter_by(roomname=roomname).first()
+    roomid = room.id
+
+    user = User.query.filter_by(username=username).first()
+    userid = user.id
+
+    schedule = Schedule.query.filter_by(room_id=roomid).filter_by(user_id=userid).filter_by(
+        class_date=class_date).filter_by(class_n=class_n).first()
+    db.session.delete(schedule)
+    db.session.commit()
+
+    notificationutil.newnoti(userid, "您预定的会议室%s审核未通过" % roomname)
+
+    flash("删除成功","success")
+    return redirect(url_for("admin.schedulemanager"))
+
+
+@adminbp.route("/manage/passschedule/<int:roomname>/<string:username>/<string:class_date>/<string:class_n>/",
+               methods=["GET"])
+@login_required
+def passschedule(roomname, username, class_date, class_n):
+    room = Room.query.filter_by(roomname=roomname).first()
+    roomid = room.id
+
+    user = User.query.filter_by(username=username).first()
+    userid = user.id
+
+    schedule = Schedule.query.filter_by(room_id=roomid).filter_by(user_id=userid).filter_by(
+        class_date=class_date).filter_by(class_n=class_n).first()
+    schedule.is_active = True
+
+    db.session.commit()
+
+    notificationutil.newnoti(userid,"您预定的会议室%s审核通过" % roomname)
+
+
+    flash("审核通过", "success")
+    return redirect(url_for("admin.schedulemanager"))
