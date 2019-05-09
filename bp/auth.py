@@ -1,8 +1,12 @@
-from flask import Blueprint, render_template, flash, redirect,url_for
+from flask import Blueprint, render_template, flash, redirect, url_for
 from flask_login import login_user, login_required, current_user, logout_user
 
 from Form import Register, Role, Login
-from Model import User, db
+from Model import User, db, Schedule
+
+import calendar
+import datetime
+from utils import scheduleutil
 
 authbp = Blueprint("auth", __name__, static_folder='static', static_url_path="/static", template_folder="templates")
 
@@ -23,7 +27,7 @@ def registerfun():
 
         if (User.query.filter_by(username=username).first() != None):
             return render_template("error.html", errmsg="用户已存在,请直接登陆!")
-        if(username=="admin"):
+        if (username == "admin"):
             adminrole = Role.query.filter_by(role_name="admin").first()
             user = User(username="admin", role_id=adminrole.id, isactive=True)
         else:
@@ -49,7 +53,6 @@ def registerfun():
         if (User.query.filter_by(username="admin").first() == None):
             haveadmin = True
         return render_template("register.html", form=regform, nothaveadmin=haveadmin)
-
 
 
 @authbp.route("/addrole", methods=["GET"])
@@ -91,10 +94,33 @@ def logout():
 @authbp.route("/me")
 @login_required
 def me():
+    year = datetime.datetime.now().year
+    month = datetime.datetime.now().month
+    day = datetime.datetime.now().day
+
+    today = datetime.date(year, month, day)  # datetime.date
+
+    weekday, lastday = calendar.monthrange(year, month)
+
+    schedulelist = Schedule.query.filter(Schedule.class_date >= today).filter(
+        Schedule.class_date < today + datetime.timedelta(days=7)).filter(Schedule.user_id == current_user.id) \
+        .order_by(Schedule.class_n).all()
+
     print(current_user)
-    if(current_user.username=="admin" or current_user.role.role_name=="admin"):
+    if (current_user.username == "admin" or current_user.role.role_name == "admin"):
         return redirect(url_for("admin.admin"))
-    return render_template("me.html")
+    return render_template("me.html", schedulelist=schedulelist)
+
+
+@authbp.route("/cancelbooking/<int:scheduleid>")
+@login_required
+def cancelbooking(scheduleid):
+    user_id = current_user.id
+    if (scheduleutil.remove(scheduleid, user_id) == True):
+        flash("删除成功", "success")
+    else:
+        flash("删除失败", "warning")
+    return redirect(url_for("auth.me"))
 
 
 @authbp.route("/nopermission")
@@ -103,9 +129,8 @@ def nopermission():
     return render_template("admin/permissiondenied.html")
 
 
-
 @authbp.route("/unactive")
 def unactive():
-    if(current_user!=None):
+    if (current_user != None):
         return redirect(url_for("auth.me"))
     return render_template("unactive.html")

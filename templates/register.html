@@ -1,12 +1,55 @@
 {% extends "base.html" %}
 
+{% block userstylesheet %}
+    <style>
+        .form-signin {
+            max-width: 330px;
+            padding: 15px;
+            margin: 0 auto;
+        }
+    </style>
+{% endblock %}
 {% block title %}注册{% endblock %}
 
 
 {% block body %}
 
-    <form action="register" method="post">
 
+    <br>
+    {% if (nothaveadmin==True) %}
+        注册一个 admin 账户成为管理员
+    {% endif %}
+    <br>
+    <div class="container">
+        <form class="form-signin" method="post" action="/register">
+            {{ form.csrf_token }}
+            <h2>注册</h2>
+            <br>
+            {{ form.role.label }}
+            {{ form.role(class="form-control") }}
+            <br>
+            <p>
+                用户名
+                <label for="username" class="sr-only">用户名</label>
+                {{ form.username(class="form-control",placeholder="用户名" ) }}
+            </p>
+
+            <p>
+                密码
+                <label for="username" class="sr-only">密码</label>
+                {{ form.password(class="form-control",placeholder="密码" ) }}
+            </p>
+            <p>
+                重复密码
+                <label for="username" class="sr-only">重复密码</label>
+                {{ form.repeatpassword(class="form-control",placeholder="重复密码" ) }}
+            </p>
+
+            <button class="btn btn-lg btn-primary btn-block" type="submit">注册</button>
+        </form>
+    </div>
+
+    <form action="register" method="post">
         {{ form.csrf_token }}
         <br>
         {% if (nothaveadmin==True) %}

@@ -54,20 +54,20 @@
                 <div class="modal-body">
                     <input type="hidden" id="needactive" value="{{ model["room"]["needactive"] }}">
                     <form method="post" action="{{ url_for("room.bookaroom") }}">
-                        <input type="text" id="roomname" name="roomname">
-                        <input type="text" id="classn" name="classn">
-                        <input type="text" id="daysdelta" name="daysdelta">
+                        <input type="hidden" id="roomname" name="roomname">
+                        <input type="hidden" id="classn" name="classn">
+                        <input type="hidden" id="daysdelta" name="daysdelta">
 
                         <input type="hidden" class="form-control" id="roomid"
                                value="{{ model["room"]["roomid"] }}">
                         <div class="form-group">
                             <label for="usage-text" class="col-form-label">预定此教室的用途:</label>
-                            <input class="form-control" id="usage-text" name="useage"></input>
+                            <textarea class="form-control" id="usage-text" name="useage"></textarea>
                         </div>
 
                         {% if (model["room"]["needactive"]==True) %}
                             <span class="text-sm-center text-md-right text-danger"
-                                  style="margin-right: 10px">预定此教室需要管理员审核</span>
+                                  style="margin-right: 10px">预订此教室需要管理员审核</span>
                         {% endif %}
 
                         <div class="modal-footer">

@@ -4,16 +4,67 @@
 {% block body %}
 
 
-    用户名:{{ current_user.get_id() }}<br>
-    角色:{{ current_user.role.role_name }}<br>
-    username:{{ current_user.username }}<br>
-    激活状态:
-    {% if current_user.isactive==True %}
-        已激活
-    {% else %}
-        未激活
-    {% endif %}
     <br>
-    <a href="{{ url_for("auth.logout") }}">退出登陆</a>
+    <br>
+    <div class="container">
+        <div class="text-center h3" style="margin-bottom: 20px">
+            角色:{{ current_user.role.role_name }}<br>
+            用户名:{{ current_user.username }}<br>
+            激活状态:
+            {% if current_user.isactive==True %}
+                已激活
+            {% else %}
+                未激活
+            {% endif %}
+            <br>
+            <a href="{{ url_for("auth.logout") }}">退出登陆</a>
+        </div>
+
+
+        {#    TODO:已经预订教室#}
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">教室</th>
+                <th scope="col">时间</th>
+                <th scope="col">用途</th>
+                <th scope="col">审核通过</th>
+                <th scope="col">操作</th>
+
+
+            </tr>
+            </thead>
+            <tbody>
+
+            <h4>已经预订的教室:</h4>
+            {% for i in schedulelist %}
+                <tr>
+                    <th scope="row">{{ loop.index }}</th>
+                    <td>{{ i.room.roomname }}</td>
+                    <td>{{ i.class_date }}第{{ i.class_n }}节课</td>
+                    <td>{{ i.useage }}</td>
+                    <td>
+                        {% if(i.is_active ) %}
+                            通过
+                        {% else %}
+                            未通过
+                        {% endif %}
+
+                    </td>
+                    <td><a href="{{ url_for("auth.cancelbooking",scheduleid=i.id) }}" class="btn btn-primary">取消预订</a></td>
+
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+        </table>
+
+
+    </div>
+
 
 {% endblock %}
